@@ -1,0 +1,13 @@
+{
+  "name": "roblox-trade-bot",
+  "version": "1.0.0",
+  "description": "Roblox limited item market tracker and trading dashboard",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roblox Trade Bot</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-brand">
+      <span class="nav-logo">RBX</span>
+      <span class="nav-title">Trade Bot</span>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="nav-link active" data-tab="dashboard">Dashboard</a>
+      <a href="#" class="nav-link" data-tab="items">Items</a>
+      <a href="#" class="nav-link" data-tab="flips">Flips</a>
+      <a href="#" class="nav-link" data-tab="portfolio">Portfolio</a>
+    </div>
+    <button class="btn btn-sm btn-refresh" id="refreshBtn">Refresh</button>
+  </nav>
+
+  <div class="container">
+    <div id="tab-dashboard" class="tab active">
+      <h2>Market Overview</h2>
+      <div class="stats-row" id="statsRow">
+        <div class="stat-card"><div class="stat-value" id="statItems">—</div><div class="stat-label">Items Tracked</div></div>
+        <div class="stat-card"><div class="stat-value" id="statAvgRap">—</div><div class="stat-label">Avg RAP</div></div>
+        <div class="stat-card"><div class="stat-value" id="statTotalValue">—</div><div class="stat-label">Total Value</div></div>
+        <div class="stat-card"><div class="stat-value" id="statTotalRap">—</div><div class="stat-label">Total RAP</div></div>
+      </div>
+
+      <h3>Top Flip Opportunities</h3>
+      <div class="table-wrap" id="dashboardFlips"><div class="loading">Loading...</div></div>
+
+      <h3>Trending Items</h3>
+      <div class="table-wrap" id="dashboardTrending"><div class="loading">Loading...</div></div>
+    </div>
+
+    <div id="tab-items" class="tab">
+      <div class="items-header">
+        <h2>Items</h2>
+        <div class="items-controls">
+          <input type="text" id="itemSearch" placeholder="Search items..." class="input">
+          <select id="itemSort" class="input" style="width:auto">
+            <option value="name">Name</option>
+            <option value="rap">RAP</option>
+            <option value="value">Value</option>
+            <option value="projected">Projected</option>
+          </select>
+          <input type="number" id="minRap" placeholder="Min RAP" class="input" style="width:100px">
+          <input type="number" id="maxRap" placeholder="Max RAP" class="input" style="width:100px">
+        </div>
+      </div>
+      <div class="table-wrap" id="itemsTable"><div class="loading">Loading...</div></div>
+    </div>
+
+    <div id="tab-flips" class="tab">
+      <h2>Flip Finder</h2>
+      <p class="subtitle">Items where Value > RAP — sorted by best flipping score</p>
+      <div class="table-wrap" id="flipsTable"><div class="loading">Loading...</div></div>
+    </div>
+
+    <div id="tab-portfolio" class="tab">
+      <h2>Portfolio</h2>
+      <div class="portfolio-form">
+        <input type="number" id="pfItemId" placeholder="Item ID" class="input">
+        <input type="number" id="pfPrice" placeholder="Purchase Price (RAP)" class="input">
+        <input type="number" id="pfQty" placeholder="Qty" class="input" value="1">
+        <button class="btn" id="pfAddBtn">Add to Portfolio</button>
+      </div>
+      <div class="table-wrap" id="portfolioTable"><div class="loading">No items in portfolio. Add some above.</div></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="itemModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Item Details</h3>
+        <button class="btn-close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
