@@ -5,6 +5,23 @@ const headers = {
   'Accept': 'application/json',
 };
 
+const TREND_MAP = {
+  0: 'Rising',
+  1: 'Stable',
+  2: 'Declining',
+  3: 'Unstable',
+  4: 'Rapidly Rising',
+};
+
+const DEMAND_MAP = {
+  '-1': 'Unknown',
+  0: 'Terrible',
+  1: 'Low',
+  2: 'Normal',
+  3: 'High',
+  4: 'Amazing',
+};
+
 export async function fetchAllItems() {
   const res = await fetch(ITEM_API, { headers });
   if (!res.ok) throw new Error(`Rolimons API returned ${res.status}`);
@@ -17,11 +34,11 @@ export async function fetchAllItems() {
       id: Number(id),
       name: data[0],
       acronym: data[1] || '',
-      rap: data[2] || 0,
-      value: data[3] || 0,
-      trend: data[4] || '',
-      projected: data[5] || 0,
-      demand: data[7] || '',
+      rap: Math.max(0, data[2] || 0),
+      value: Math.max(0, data[3] || 0),
+      projected: Math.max(0, data[4] || 0),
+      trend: TREND_MAP[data[5]] || 'Unknown',
+      demand: DEMAND_MAP[data[6]] || 'Unknown',
     });
   }
   return items;

@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roblox Trade Bot</title>
+  <title>RBX Trade Bot</title>
   <link rel="stylesheet" href="/style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <nav class="nav">
@@ -14,77 +13,113 @@
       <span class="nav-title">Trade Bot</span>
     </div>
     <div class="nav-links">
-      <a href="#" class="nav-link active" data-tab="dashboard">Dashboard</a>
+      <a href="#" class="nav-link active" data-tab="trade">Send Trade</a>
       <a href="#" class="nav-link" data-tab="items">Items</a>
-      <a href="#" class="nav-link" data-tab="flips">Flips</a>
       <a href="#" class="nav-link" data-tab="portfolio">Portfolio</a>
     </div>
-    <button class="btn btn-sm btn-refresh" id="refreshBtn">Refresh</button>
   </nav>
 
   <div class="container">
-    <div id="tab-dashboard" class="tab active">
-      <h2>Market Overview</h2>
-      <div class="stats-row" id="statsRow">
-        <div class="stat-card"><div class="stat-value" id="statItems">—</div><div class="stat-label">Items Tracked</div></div>
-        <div class="stat-card"><div class="stat-value" id="statAvgRap">—</div><div class="stat-label">Avg RAP</div></div>
-        <div class="stat-card"><div class="stat-value" id="statTotalValue">—</div><div class="stat-label">Total Value</div></div>
-        <div class="stat-card"><div class="stat-value" id="statTotalRap">—</div><div class="stat-label">Total RAP</div></div>
+    <div class="config-banner" id="configBanner">
+      <span>🔑 Owner lookup requires your Roblox cookie. </span>
+      <a href="#" onclick="showSetup()" style="color:var(--accent);text-decoration:underline">Set up</a>
+    </div>
+    <!-- SEND TRADE TAB -->
+    <div id="tab-trade" class="tab active">
+      <h2>Send a Trade</h2>
+      <p class="subtitle">Select up to 4 items per side. Only owners who have ALL items you want will show up.</p>
+
+      <div class="trade-form">
+        <div class="trade-side">
+          <label class="trade-label">You Offer</label>
+          <div class="item-chips" id="offerChips"></div>
+          <div class="item-add-row">
+            <input type="text" id="offerSearch" class="input" placeholder="Search item to offer..." autocomplete="off">
+            <button class="btn btn-sm" onclick="addOfferItem()" id="offerAddBtn" disabled>Add</button>
+          </div>
+          <div class="search-results" id="offerResults"></div>
+          <div class="chip-hint">Up to 4 items</div>
+        </div>
+
+        <div class="trade-vs"><span class="vs-badge">FOR</span></div>
+
+        <div class="trade-side">
+          <label class="trade-label">You Want</label>
+          <div class="item-chips" id="targetChips"></div>
+          <div class="item-add-row">
+            <input type="text" id="targetSearch" class="input" placeholder="Search item to receive..." autocomplete="off">
+            <button class="btn btn-sm" onclick="addTargetItem()" id="targetAddBtn" disabled>Add</button>
+          </div>
+          <div class="search-results" id="targetResults"></div>
+          <div class="chip-hint">Up to 4 items</div>
+        </div>
       </div>
 
-      <h3>Top Flip Opportunities</h3>
-      <div class="table-wrap" id="dashboardFlips"><div class="loading">Loading...</div></div>
+      <button class="btn btn-primary" id="findOwnersBtn" onclick="findOwners()">Find Trade Partners</button>
 
-      <h3>Trending Items</h3>
-      <div class="table-wrap" id="dashboardTrending"><div class="loading">Loading...</div></div>
+      <div id="tradeResults" style="display:none">
+        <div class="results-header">
+          <h3>Owners <span id="resultSummary"></span></h3>
+          <span class="badge" id="onlineBadge"></span>
+        </div>
+        <div class="owner-list" id="ownerList"></div>
+      </div>
     </div>
 
+    <!-- ITEMS TAB -->
     <div id="tab-items" class="tab">
       <div class="items-header">
         <h2>Items</h2>
         <div class="items-controls">
-          <input type="text" id="itemSearch" placeholder="Search items..." class="input">
+          <input type="text" id="itemSearch" class="input" placeholder="Search items..." style="width:250px">
           <select id="itemSort" class="input" style="width:auto">
             <option value="name">Name</option>
             <option value="rap">RAP</option>
             <option value="value">Value</option>
-            <option value="projected">Projected</option>
           </select>
-          <input type="number" id="minRap" placeholder="Min RAP" class="input" style="width:100px">
-          <input type="number" id="maxRap" placeholder="Max RAP" class="input" style="width:100px">
+          <input type="number" id="minRap" class="input" placeholder="Min RAP" style="width:100px">
+          <input type="number" id="maxRap" class="input" placeholder="Max RAP" style="width:100px">
         </div>
       </div>
       <div class="table-wrap" id="itemsTable"><div class="loading">Loading...</div></div>
     </div>
 
-    <div id="tab-flips" class="tab">
-      <h2>Flip Finder</h2>
-      <p class="subtitle">Items where Value > RAP — sorted by best flipping score</p>
-      <div class="table-wrap" id="flipsTable"><div class="loading">Loading...</div></div>
-    </div>
-
+    <!-- PORTFOLIO TAB -->
     <div id="tab-portfolio" class="tab">
       <h2>Portfolio</h2>
       <div class="portfolio-form">
-        <input type="number" id="pfItemId" placeholder="Item ID" class="input">
-        <input type="number" id="pfPrice" placeholder="Purchase Price (RAP)" class="input">
-        <input type="number" id="pfQty" placeholder="Qty" class="input" value="1">
-        <button class="btn" id="pfAddBtn">Add to Portfolio</button>
+        <input type="number" id="pfItemId" class="input" placeholder="Item ID">
+        <input type="number" id="pfPrice" class="input" placeholder="Purchase Price">
+        <input type="number" id="pfQty" class="input" placeholder="Qty" value="1" style="width:80px">
+        <button class="btn" onclick="addPortfolioItem()">Add</button>
       </div>
-      <div class="table-wrap" id="portfolioTable"><div class="loading">No items in portfolio. Add some above.</div></div>
+      <div class="table-wrap" id="portfolioTable"><div class="loading">No items in portfolio.</div></div>
     </div>
   </div>
 
-  <div class="modal-overlay" id="itemModal">
+  <div class="modal-overlay" id="setupModal">
     <div class="modal">
       <div class="modal-header">
-        <h3 id="modalTitle">Item Details</h3>
-        <button class="btn-close" id="modalClose">&times;</button>
+        <h3>Set Up Roblox Cookie</h3>
+        <button class="btn-close" onclick="closeSetup()">&times;</button>
       </div>
-      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-body">
+        <p style="margin-bottom:1rem;line-height:1.5">The Roblox economy API requires authentication to look up item owners. Your cookie stays on <strong>your machine</strong> and is only sent to Roblox's official API.</p>
+        <ol style="margin-bottom:1rem;padding-left:1.25rem;line-height:1.8">
+          <li>Open Chrome/Firefox and go to <strong>roblox.com</strong></li>
+          <li>Log in to your account</li>
+          <li>Open DevTools (<kbd>F12</kbd>) → <strong>Application</strong> tab → <strong>Cookies</strong></li>
+          <li>Copy the value of <code>.ROBLOSECURITY</code></li>
+          <li>Create <code style="background:var(--surface2);padding:0.1rem 0.3rem;border-radius:4px">server/data/config.json</code> with:</li>
+        </ol>
+        <pre style="background:var(--surface2);padding:0.75rem;border-radius:8px;font-size:0.85rem;margin-bottom:1rem">{
+  ".ROBLOSECURITY": "your_cookie_here"
+}</pre>
+        <p style="color:var(--text2);font-size:0.85rem">Restart the server after saving. The cookie is in .gitignore.</p>
+        <button class="btn" onclick="closeSetup()" style="margin-top:1rem">Got it</button>
+      </div>
     </div>
   </div>
-
   <script src="/app.js"></script>
 </body>
 </html>

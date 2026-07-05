@@ -1,15 +1,13 @@
-# Roblox Trade Bot
+# RBX Trade Bot
 
-A web dashboard for tracking Roblox limited items, finding flip opportunities, and managing your trading portfolio.
+Find owners of any Roblox limited item and send them trade offers.
 
-## Features
+## How it works
 
-- **Market Dashboard** — live stats on tracked items, total value, average RAP
-- **Item Browser** — search and filter all limited items with RAP, Value, trend, and demand info
-- **Flip Finder** — automatically finds items where Value > RAP with the highest profit potential
-- **Portfolio Tracker** — add items you own, track P&L in real time
-- **Price History** — view RAP history charts for any item
-- **Auto-refresh** — pulls fresh data from Rolimons every 5 minutes
+1. **Search** for the item you want to offer and the item you want to receive
+2. **Find owners** — the bot looks up who owns the target item via Roblox's API
+3. **Check online status** — sees who's currently online
+4. **Send trade** — click a user to open the Roblox trade page with them
 
 ## Quick Start
 
@@ -20,47 +18,24 @@ npm install
 npm start
 ```
 
-Open **http://localhost:3000** in your browser.
+Open **http://localhost:3000**
 
-## How It Works
+## Features
 
-The bot pulls data from the [Rolimons](https://www.rolimons.com) item API, which tracks Roblox limited item prices. It caches the data locally and serves it through a clean web dashboard.
+- **Send Trade** — pick items, find owners, send offers
+- **Item Browser** — search/filter all limited items with RAP, Value, trend, demand
+- **Portfolio** — track items you own with live P&L
+- **Online detection** — see which owners are online right now
 
-- **RAP** — Recent Average Price (what the item has been selling for)
-- **Value** — The item's estimated value (often higher than RAP for demand items)
-- **Spread** — Value - RAP; positive means flipping potential
-- **Trend** — Whether the item is Rising, Stable, or Declining
-
-## Project Structure
-
-```
-roblox-trade-bot/
-├── server/
-│   ├── index.js          # Express server entry point
-│   ├── server.js         # API routes (items, flips, portfolio, stats)
-│   ├── fetcher.js        # Rolimons API client + data caching
-│   └── api/
-│       ├── rolimons.js   # Rolimons item API wrapper
-│       └── roblox.js     # Roblox thumbnail API wrapper
-├── public/
-│   ├── index.html        # Dashboard UI
-│   ├── style.css         # Dark theme styles
-│   └── app.js            # Frontend logic (Chart.js, search, portfolio)
-└── package.json
-```
-
-## API Endpoints
+## API
 
 | Route | Description |
 |---|---|
-| `GET /api/stats` | Market overview stats |
-| `GET /api/items` | All items (supports `?search=`, `?sort=`, `?minRap=`, `?maxRap=`) |
-| `GET /api/items/:id` | Single item with price history |
-| `GET /api/flips` | Top 50 flip opportunities |
-| `GET /api/portfolio` | User's portfolio |
-| `POST /api/portfolio/add` | Add item to portfolio |
-| `DELETE /api/portfolio/:index` | Remove from portfolio |
-| `POST /api/refresh` | Force refresh from Rolimons |
+| `GET /api/items` | Search items (`?search=`, `?sort=`, `?minRap=`, `?maxRap=`) |
+| `GET /api/items/:id` | Item details with price history |
+| `GET /api/trade/find?targetItemId=X&offerItemId=Y` | Find owners + online status |
+| `GET /api/stats` | Market stats |
+| `POST /api/refresh` | Force re-fetch from Rolimons |
 
 ## License
 
