@@ -1,4 +1,4 @@
-# RBX Trade Bot
+# Trade Helper
 
 Find owners of any Roblox limited item and send them trade offers.
 
